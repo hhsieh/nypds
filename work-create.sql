@@ -3,5 +3,5 @@ create table if not exists work (
     composerName text,
     workTitle text,
     movement text,
-    conductor text
+    conductorName text
 );

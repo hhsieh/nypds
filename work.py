@@ -1,9 +1,9 @@
 import sqlite3
 import xml.etree.cElementTree
 
-def insert_work(db_conn, workID, composerName, workTitle, movement, conductor):
+def insert_work(db_conn, workID, composerName, workTitle, movement, conductorName):
     curs = db_conn.cursor()
-    curs.execute("insert into work values (?,?,?,?,?)", (workID, composerName, workTitle, movement, conductor))
+    curs.execute("insert into work values (?,?,?,?,?)", (workID, composerName, workTitle, movement, conductorName))
     db_conn.commit()
 
 def work_data_from_element(element):
@@ -27,12 +27,12 @@ def work_data_from_element(element):
         movement = movement.text
     else:
         movement = ''
-    conductor = element.find("conductor")
-    if conductor != None:
-        conductor = conductor.text
+    conductorName = element.find("conductorName")
+    if conductorName != None:
+        conductorName = conductorName.text
     else:
-        conductor = ''
-    return workID, composerName, workTitle, movement, conductor
+        conductorName = ''
+    return workID, composerName, workTitle, movement, conductorName
 
 ## add the main loop to get all the work information from the XML file
 if __name__ == "__main__":
@@ -40,6 +40,6 @@ if __name__ == "__main__":
     programs = xml.etree.cElementTree.parse("complete.xml")
     work = programs.findall("program/worksInfo/work")
     for index, element in enumerate(work):
-        workID, composerName, workTitle, movement, conductor = work_data_from_element(element)
-        insert_work(conn, workID, composerName, workTitle, movement, conductor)
+        workID, composerName, workTitle, movement, conductorName = work_data_from_element(element)
+        insert_work(conn, workID, composerName, workTitle, movement, conductorName)
 
