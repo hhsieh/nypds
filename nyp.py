@@ -3,10 +3,10 @@ try:
 except ImportError:
     import xml.etree.ElemeneTree as ET
 
-tree = ET.parse('complete.xml')
 
 root = ET.parse("complete.xml") #root is "programs"
 
+## collect data - workID, composerName, workTitle, movement, conductor
 for work in root.findall("program/worksInfo/work"):
     ID = work.get("ID")
     composerName = work.find("composerName")
@@ -31,34 +31,8 @@ for work in root.findall("program/worksInfo/work"):
         conductor = ''
     print ID, composerName, workTitle, movement, conductor
 
-
-#for program in root.findall("program"):
-#    id = program.find("id")
-#    programID = program.find("programID")
-#    orchestra = program.find("orchestra")
-#    season = program.find("season")
-
-    
-
-
-
-      
-import lxml #to get parent nodes
-
-for soloist in root.findall("program/worksInfo/work/soloists/soloist"):
-    soloistName = soloist.find("soloistName")
-    #parent = soloistName.getparent()
-    if soloistName != None:
-        soloistName = soloistName.text
-    else:
-        soloistName = ''
-    #if parent != None:
-    #    parent = parent.text
-    #else:
-    #    parent = ''
-    print soloistName#, parent
-
-
+   
+## collect data - soloistName, soloistInstrument, soloistRole 
 for soloist in root.findall("program/worksInfo/work/soloists/soloist"):
     soloistName = soloist.find("soloistName")
     if soloistName != None:
@@ -77,10 +51,7 @@ for soloist in root.findall("program/worksInfo/work/soloists/soloist"):
         soloistRole = ''
     print soloistName, soloistInstrument, soloistRole
 
-import lxml
-
-
-
+##collect data - workID, composerName
 for work in root.findall('program/worksInfo/work'):
     for composerName in work.findall('composerName'):
         if composerName.text != None:
@@ -88,14 +59,15 @@ for work in root.findall('program/worksInfo/work'):
         else:
             print work.attrib['ID'], ''
 
+## collect data - workID, soloistName
 for work in root.findall('program/worksInfo/work'):   
-    for soloistInstrument in work.findall('soloists/soloist/soloistInstrument'):
-        if soloistInstrument.text != None:
-            print work.attrib['ID'], soloistInstrument.text
+    for soloistName in work.findall('soloists/soloist/soloistName'):
+        if soloistName.text != None:
+            print work.attrib['ID'], soloistName.text
         else:
             print work.attrib['ID'], ''  
 
-
+## collect data - programID, workID, season, composerName, workTitle, conductorName
 for program in root.findall('program'):
     programID = program.find('programID')
     season = program.find('season')
@@ -112,22 +84,31 @@ for program in root.findall('program'):
                         print programID.text, season.text, work.attrib['ID'], composerName.text, workTitle.text, conductorName.text
     
 
+## collect data - programID, workID, season, composerName, workTitle, conductorName, soloistName, soloistInstrument, soloistRole (need some tweats; not work yet)
+for program in root.findall('program'):
+    programID = program.find('programID')
+    season = program.find('season')
+    if programID is not None:
+        worksInfo = program.find('worksInfo')
+        if worksInfo is not None:
+            work = worksInfo.find('work')
+            if work is not None:
+                composerName = work.find('composerName')
+                if composerName is not None:
+                    workTitle = work.find('workTitle')
+                    conductorName = work.find('conductorName')
+                    if conductorName is not None:
+			soloistName = work.find('soloists/soloist/soloistName')
+			if soloistName is not None:
+			    soloistInstrument = work.find('soloists/soloist/soloistInstrument')
+			    if soloistInstrument is not None:				
+				soloistRole = work.find('soloists/soloist/soloistRole')
+				if soloistRole is not None:	
+				    print programID.text, season.text, work.attrib['ID'], composerName.text, workTitle.text, conductorName.text, soloistName.text, soloistInstrument.text, soloistRole.text
 
 
 
-#programID = [programID for programID in root.findall('program/programID')]
-#print(len(programID))            
 
 
-#for work in root.findall('program/worksInfo/work'):
-#    workID = [work.attrib['ID'] for work.attrib['ID'] in root.findall('program/worksInfo/work')]
-#    soloistName = [soloistName.text for soloistName in work.findall('soloists/soloist/soloistName')]
-#    print workID
-#    print soloistName
-
-
-#for Date in root.findall('program/concertInfo/Date'):
-#    print Date.text     
-     
         
 
